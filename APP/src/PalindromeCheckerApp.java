@@ -1,42 +1,34 @@
-public class UseCase4PalindromeCheckerApp {
+import java.util.Scanner;
+import java.util.Stack;
 
-    /**
-     * Application entry point for UC4.
-     *
-     * @param args Command-line arguments
-     */
+public class UseCase5PalindromeCheckerApp {
+
     public static void main(String[] args) {
 
-        // Declare and initialize the input string.
-        String input = "radar";
+        Scanner scanner = new Scanner(System.in);
+        Stack<Character> stack = new Stack<>();
 
-        // Convert the string into a character array.
-        char[] chars = input.toCharArray();
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
 
-        // Initialize pointer at the beginning.
-        int start = 0;
-
-        // Initialize pointer at the end.
-        int end = chars.length - 1;
-
-        // Assume palindrome initially.
-        boolean isPalindrome = true;
-
-        // Two-pointer comparison
-        while (start < end) {
-            if (chars[start] != chars[end]) {
-                isPalindrome = false;
-                break;
-            }
-            start++;
-            end--;
+        // Push characters into stack
+        for (int i = 0; i < input.length(); i++) {
+            stack.push(input.charAt(i));
         }
 
-        // Display result
-        if (isPalindrome) {
-            System.out.println(input + " is a Palindrome.");
+        // Pop characters to form reversed string
+        String reversed = "";
+        while (!stack.isEmpty()) {
+            reversed = reversed + stack.pop();
+        }
+
+        // Compare original and reversed strings
+        if (input.equals(reversed)) {
+            System.out.println("The given string is a Palindrome.");
         } else {
-            System.out.println(input + " is NOT a Palindrome.");
+            System.out.println("The given string is not a Palindrome.");
         }
+
+        scanner.close();
     }
 }
