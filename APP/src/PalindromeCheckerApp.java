@@ -3,16 +3,10 @@ import java.util.Stack;
 import java.util.Deque;
 import java.util.ArrayDeque;
 
-// Strategy Interface
-interface PalindromeStrategy {
-    boolean checkPalindrome(String input);
-}
+public class UseCase13PalindromeCheckerApp {
 
-// Stack Strategy Implementation
-class StackStrategy implements PalindromeStrategy {
-
-    public boolean checkPalindrome(String input) {
-
+    // Stack-based palindrome check
+    public static boolean stackPalindrome(String input) {
         Stack<Character> stack = new Stack<>();
 
         for (char c : input.toCharArray()) {
@@ -24,16 +18,11 @@ class StackStrategy implements PalindromeStrategy {
                 return false;
             }
         }
-
         return true;
     }
-}
 
-// Deque Strategy Implementation
-class DequeStrategy implements PalindromeStrategy {
-
-    public boolean checkPalindrome(String input) {
-
+    // Deque-based palindrome check
+    public static boolean dequePalindrome(String input) {
         Deque<Character> deque = new ArrayDeque<>();
 
         for (char c : input.toCharArray()) {
@@ -41,62 +30,58 @@ class DequeStrategy implements PalindromeStrategy {
         }
 
         while (deque.size() > 1) {
-
             if (deque.removeFirst() != deque.removeLast()) {
                 return false;
             }
         }
-
         return true;
     }
-}
 
-// Context Class
-class PalindromeService {
+    // Recursive palindrome check
+    public static boolean recursivePalindrome(String str, int start, int end) {
 
-    private PalindromeStrategy strategy;
+        if (start >= end) {
+            return true;
+        }
 
-    public PalindromeService(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
+        }
+
+        return recursivePalindrome(str, start + 1, end - 1);
     }
-
-    public boolean execute(String input) {
-        return strategy.checkPalindrome(input);
-    }
-}
-
-// Main Application
-public class UseCase12PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Choose Palindrome Strategy:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        PalindromeStrategy strategy;
+        // Stack Strategy Timing
+        long start1 = System.nanoTime();
+        boolean stackResult = stackPalindrome(input);
+        long end1 = System.nanoTime();
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        // Deque Strategy Timing
+        long start2 = System.nanoTime();
+        boolean dequeResult = dequePalindrome(input);
+        long end2 = System.nanoTime();
 
-        PalindromeService service = new PalindromeService(strategy);
+        // Recursive Strategy Timing
+        long start3 = System.nanoTime();
+        boolean recursiveResult = recursivePalindrome(input, 0, input.length() - 1);
+        long end3 = System.nanoTime();
 
-        if (service.execute(input)) {
-            System.out.println("The given string is a Palindrome.");
-        } else {
-            System.out.println("The given string is not a Palindrome.");
-        }
+        System.out.println("\nPalindrome Results:");
+        System.out.println("Stack Result: " + stackResult);
+        System.out.println("Deque Result: " + dequeResult);
+        System.out.println("Recursive Result: " + recursiveResult);
+
+        System.out.println("\nExecution Time (nanoseconds):");
+        System.out.println("Stack Strategy Time: " + (end1 - start1));
+        System.out.println("Deque Strategy Time: " + (end2 - start2));
+        System.out.println("Recursive Strategy Time: " + (end3 - start3));
 
         scanner.close();
     }
